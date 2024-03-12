@@ -11,8 +11,11 @@ export class ProjectService {
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
   ) {}
 
-  create(createProjectDto: CreateProjectDto) {
-    const project = new this.projectModel(createProjectDto);
+  create(createProjectDto: CreateProjectDto, userId: string) {
+    const project = new this.projectModel({
+      ...createProjectDto,
+      ownerId: userId,
+    });
     return project.save();
   }
 

@@ -8,19 +8,23 @@ import {
   Put,
   UsePipes,
   ValidationPipe,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Put()
   @UsePipes(new ValidationPipe())
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectService.create(createProjectDto);
+  create(@Body() createProjectDto: CreateProjectDto, @Req() req) {
+    return this.projectService.create(createProjectDto, req.user._id);
   }
 
   @Get()

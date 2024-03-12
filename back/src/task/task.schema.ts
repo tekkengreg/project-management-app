@@ -6,19 +6,19 @@ export type TaskDocument = HydratedDocument<Task>;
 
 @Schema()
 export class Task {
-  @Prop({ require: true })
+  @Prop({ required: true })
   _id: UUID;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   name: string;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   status: boolean;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   ownerId: UUID;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   projectId: UUID;
 }
 
