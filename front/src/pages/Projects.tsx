@@ -75,6 +75,12 @@ function Projects() {
         }}
       >
         <Toolbar />
+        {projects.length === 0 && (
+          <Typography variant="h6" component="h2">
+            Aucun projet
+          </Typography>
+        )}
+
         {projects.map((project) => (
           <Accordion
             key={project._id}

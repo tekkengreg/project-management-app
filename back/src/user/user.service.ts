@@ -6,15 +6,17 @@ import { User, UserDocument } from './user.schema';
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
-    userModel.findOne({ email: 'toto@email.com' }).then((user) => {
-      if (!user) {
-        userModel.create({
+    userModel
+      .updateOne(
+        { email: 'toto@email.com' },
+        {
           _id: '9e155b92-65bd-4cb7-9ce4-d89b16c64e47',
           email: 'toto@email.com',
           password: 'tatata',
-        });
-      }
-    });
+        },
+        { upsert: true },
+      )
+      .then(() => console.log('User created'));
   }
 
   async findOne(email: string) {

@@ -64,7 +64,7 @@ function TaskList({ projectId }: { projectId: string }) {
       <ListItem>
         <TextField
           id="standard-basic"
-          label="Standard"
+          label="Nom"
           variant="standard"
           value={newTaskName}
           onChange={handleNewTaskNameChange}
