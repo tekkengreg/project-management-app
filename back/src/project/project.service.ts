@@ -11,24 +11,29 @@ export class ProjectService {
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
   ) {}
 
-  create(createProjectDto: CreateProjectDto, userId: string) {
+  async create(
+    projectId: string,
+    createProjectDto: CreateProjectDto,
+    userId: string,
+  ) {
     const project = new this.projectModel({
+      _id: projectId,
       ...createProjectDto,
       ownerId: userId,
     });
-    return project.save();
+    return await project.save();
   }
 
-  findAll() {
-    return this.projectModel.find();
+  async findAll() {
+    return await this.projectModel.find();
   }
 
-  findOne(id: number) {
-    return this.projectModel.findById(id);
+  async findOne(id: number) {
+    return await this.projectModel.findById(id);
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    return this.projectModel.findByIdAndUpdate(
+  async update(id: number, updateProjectDto: UpdateProjectDto) {
+    return await this.projectModel.findByIdAndUpdate(
       id,
       {
         $set: updateProjectDto,
@@ -39,7 +44,7 @@ export class ProjectService {
     );
   }
 
-  remove(id: number) {
-    return this.projectModel.deleteOne({ _id: id });
+  async remove(id: number) {
+    return await this.projectModel.deleteOne({ _id: id });
   }
 }

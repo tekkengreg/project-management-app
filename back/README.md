@@ -1,9 +1,20 @@
 # Project management
 
+## setup
+
+1. clone
+2. npm install
+3. npm run start:dev
+
 ## init db
 
-insert user
+a user is inserted at startup if needed.
 
 ```
-db.users.insert({_id:"9e155b92-65bd-4cb7-9ce4-d89b16c64e47",email:"toto@email.com", password:"tatata"})
+{
+    _id:"9e155b92-65bd-4cb7-9ce4-d89b16c64e47",
+    email:"toto@email.com",
+    password:"tatata"
+    }
+
 ```

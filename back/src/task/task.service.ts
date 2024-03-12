@@ -9,21 +9,26 @@ import { Model } from 'mongoose';
 export class TaskService {
   constructor(@InjectModel(Task.name) private taskModel: Model<TaskDocument>) {}
 
-  create(createTaskDto: CreateTaskDto) {
-    const task = new this.taskModel(createTaskDto);
+  create(taskId: string, createTaskDto: CreateTaskDto, userId: string) {
+    const task = new this.taskModel({
+      _id: taskId,
+      ...createTaskDto,
+      ownerId: userId,
+      isDone: false,
+    });
     return task.save();
   }
 
-  findAll() {
-    return this.taskModel.find();
+  async findAll(projectId: string) {
+    return await this.taskModel.find({ projectId });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.taskModel.findById(id);
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return this.taskModel.findByIdAndUpdate(
+  async update(id: string, updateTaskDto: UpdateTaskDto) {
+    return await this.taskModel.findByIdAndUpdate(
       id,
       {
         $set: updateTaskDto,
@@ -34,7 +39,7 @@ export class TaskService {
     );
   }
 
-  remove(id: number) {
-    return this.taskModel.deleteOne({ _id: id });
+  async remove(id: string) {
+    return await this.taskModel.deleteOne({ _id: id });
   }
 }

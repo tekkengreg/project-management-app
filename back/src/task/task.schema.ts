@@ -13,7 +13,7 @@ export class Task {
   name: string;
 
   @Prop({ required: true })
-  status: boolean;
+  isDone: boolean;
 
   @Prop({ required: true })
   ownerId: UUID;

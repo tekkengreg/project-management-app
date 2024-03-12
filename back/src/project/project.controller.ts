@@ -15,35 +15,46 @@ import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { isUUID } from 'class-validator';
 
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Put()
+  @Put(':id')
   @UsePipes(new ValidationPipe())
-  create(@Body() createProjectDto: CreateProjectDto, @Req() req) {
-    return this.projectService.create(createProjectDto, req.user._id);
+  async create(
+    @Param('id') id: string,
+    @Body() createProjectDto: CreateProjectDto,
+    @Req() req,
+  ) {
+    if (!isUUID(id)) {
+      throw new Error('Invalid id');
+    }
+    return await this.projectService.create(id, createProjectDto, req.user._id);
   }
 
   @Get()
-  findAll() {
-    return this.projectService.findAll();
+  async findAll() {
+    return await this.projectService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.projectService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectService.update(+id, updateProjectDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateProjectDto: UpdateProjectDto,
+  ) {
+    return await this.projectService.update(+id, updateProjectDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.projectService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.projectService.remove(+id);
   }
 }

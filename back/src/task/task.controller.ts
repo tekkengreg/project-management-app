@@ -6,40 +6,50 @@ import {
   Patch,
   Param,
   Delete,
-  UsePipes,
-  ValidationPipe,
+  Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { isUUID } from 'class-validator';
 
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Put()
-  @UsePipes(new ValidationPipe())
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+  @UseGuards(AuthGuard('jwt'))
+  @Put(':id')
+  async create(
+    @Param('id') id: string,
+    @Body() createTaskDto: CreateTaskDto,
+    @Req() req,
+  ) {
+    if (!isUUID(id)) {
+      throw new Error('Invalid id');
+    }
+    return await this.taskService.create(id, createTaskDto, req.user._id);
   }
 
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  async findAll(@Query() query: any) {
+    return await this.taskService.findAll(query.projectId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.taskService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update(+id, updateTaskDto);
+  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+    return await this.taskService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.taskService.remove(id);
   }
 }

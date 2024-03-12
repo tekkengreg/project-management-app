@@ -5,10 +5,19 @@ import { User, UserDocument } from './user.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
+    userModel.findOne({ email: 'toto@email.com' }).then((user) => {
+      if (!user) {
+        userModel.create({
+          _id: '9e155b92-65bd-4cb7-9ce4-d89b16c64e47',
+          email: 'toto@email.com',
+          password: 'tatata',
+        });
+      }
+    });
+  }
 
   async findOne(email: string) {
-    console.log('email dslfkqj', await this.userModel.find());
     return await this.userModel.findOne({ email });
   }
 }
